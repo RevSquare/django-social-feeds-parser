@@ -18,7 +18,7 @@ From Github
 
 .. code-block::  shell-session
 
-    pip install -e git+https://github.com/revsquare/django-social-feeds-parser.git#egg=django_socialfeeds-parser.git
+    pip install -e git+https://github.com/revsquare/django-social-feeds-parser.git#egg=django_socialfeeds-parser
 
 *****
 Setup
