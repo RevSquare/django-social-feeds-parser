@@ -1,10 +1,8 @@
-import os
-from setuptools import setup, find_packages
-
-README = open(os.path.join(os.path.dirname(__file__), 'README.md')).read()
-
-# allow setup.py to be run from any path
-os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
+#! /usr/bin/env python
+from setuptools import find_packages
+from distutils.core import setup
+import sys
+reload(sys).setdefaultencoding('Utf-8')
 
 setup(
     name='django-social-feeds-parser',
@@ -13,7 +11,7 @@ setup(
     include_package_data=True,
     license='BSD License',
     description='A simple Django app to store and display what social media talk about site',
-    long_description=README,
+    long_description=open('README.rst').read(),
     url='https://github.com/RevSquare/django-social-feeds-parser',
     author='Tomasz Roszko, Guillaume Pousseo',
     author_email='tomaszroszko@revsquare.com, guillaumepousseo@revsquare.com',
