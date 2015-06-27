@@ -1,0 +1,3 @@
+from django.conf import settings
+
+INSTAGRAM_ACCESS_TOKEN = settings.SOCIALFEEDSPARSER_INSTAGRAM_ACCESS_TOKEN
