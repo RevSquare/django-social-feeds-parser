@@ -117,4 +117,4 @@ TODO
 ****
 
 * use celery to process news
-* wrote tests
+* write tests
