@@ -13,18 +13,18 @@ class TwitterSource(ChannelParser):
     name = 'Twitter'
     slug = 'twitter'
 
-    def get_messages_user(self, user_id, count=20):
+    def get_messages_user(self, screen_name, count=20):
         """
         Return tweets from user feed.
 
-        :param user_id: user id of the feed to parse.
+        :param screen_name: screen name of the user feed to parse.
         :type item: str
 
         :param count: number of items to retrieve (default 20).
         :type item: int
         """
         return self.get_api().user_timeline(
-            user_id=user_id, count=count,
+            screen_name=screen_name, count=count,
             include_entities=True, include_rts=True)
 
     def get_messages_search(self, search):
