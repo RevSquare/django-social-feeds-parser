@@ -112,6 +112,52 @@ Run this command (you can of course add it to a cronjob or a scheduled broker):
     python manage.py collect_social_feeds
 
 
+************
+Templatetags
+************
+
+A simple template tag is provided to display your content in a widget. You can overwrite it by adding your own 'socialfeedsparser/socialfeed_widget.html' file or by setting up a file path in the SOCIALFEEDSPARSER_TAG_TEMPLATE of your settings. You can alternatively pass the template path as an argument in the template tag in case you have several or if they differ depending on the source.
+
+You can also pass the number of items to display in the template tag.
+
+The first argument to pass is the channel instance you want to display.
+
+.. code-block::  html
+
+    {% load socialfeedsparser_tags %}
+    ...
+    {% socialfeed_display channel 5 'widgets/twitter.html' %}
+
+*****
+Other
+*****
+
+channel.get_posts
+-----------------
+
+You can trigger the published posts by order and descending publication date for a channel instance by using the 'get_posts' method. By default it will return 10 posts. You can change this number by passing it as an argument. For exemple, if you want 5 posts:
+
+
+.. code-block::  python
+
+    channel.get_posts(5)
+
+post.linkified_content
+----------------------
+
+You can use this method to make all urls, hashtags or arobased user names in a message clickable as links:
+
+
+.. code-block::  python
+
+    {{ post.content }}
+    
+    "This #hashtag is not linkified."
+
+    {{ post.linkified_content }}
+    
+    "This <a href="https://twitter.com/search?q=%s&src=hash" target="_blank">##hashtag</a> is linkified for twitter."
+
 ****
 TODO
 ****

@@ -7,7 +7,7 @@ from .managers import PostManager, ChannelManager
 from .settings import SOCIALFEEDSPARSER_SOURCE
 
 # load all sources
-from .utils import get_source
+from .utils import get_source, linkify_url, linkify_hashes, linkify_arobase
 
 SOURCE = [import_module(s).SOCIALFEEDSPARSER_SOURCE for s in SOCIALFEEDSPARSER_SOURCE]
 SOURCE_CHOICES = [(s.slug, s.name) for s in SOURCE]
@@ -51,9 +51,28 @@ class Channel(models.Model):
         current = now()
         return self.is_active and (self.updated is None or current > self.updated)
 
+    def get_posts(self, count=10):
+        """
+        Returns a the list post for a channel:
+
+        :param count: number of items to display.
+        :type item: int
+        """
+        return self.post_set.published().order_by('order', '-date')[:count]
+
     @property
     def source_class(self):
+        """
+        Returns the source class of the source instance as a property.
+        """
         return get_source(self.source)
+
+    @property
+    def posts(self):
+        """
+        Returns the 10 first posts of instance as a property.
+        """
+        return self.get_posts()
 
 
 class Post(models.Model):
@@ -83,3 +102,13 @@ class Post(models.Model):
 
     def __unicode__(self):
         return u'%s - %s' % (self.source, self.author)
+
+    @property
+    def linkified_content(self):
+        message = linkify_url(self.content)
+
+        if self.channel.source in ('twitter', 'Twitter',):
+            message = linkify_hashes(message)
+            message = linkify_arobase(message)
+
+        return message
