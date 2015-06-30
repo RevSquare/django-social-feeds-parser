@@ -132,8 +132,9 @@ The first argument to pass is the channel instance you want to display.
 Other
 *****
 
+
 channel.get_posts
------------------
+=================
 
 You can trigger the published posts by order and descending publication date for a channel instance by using the 'get_posts' method. By default it will return 10 posts. You can change this number by passing it as an argument. For exemple, if you want 5 posts:
 
@@ -142,13 +143,14 @@ You can trigger the published posts by order and descending publication date for
 
     channel.get_posts(5)
 
+
 post.linkified_content
-----------------------
+======================
 
 You can use this method to make all urls, hashtags or arobased user names in a message clickable as links:
 
 
-.. code-block::  python
+.. code-block::  html
 
     {{ post.content }}
     
@@ -157,6 +159,7 @@ You can use this method to make all urls, hashtags or arobased user names in a m
     {{ post.linkified_content }}
     
     "This <a href="https://twitter.com/search?q=%s&src=hash" target="_blank">##hashtag</a> is linkified for twitter."
+
 
 ****
 TODO
