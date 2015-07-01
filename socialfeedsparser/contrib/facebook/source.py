@@ -57,6 +57,7 @@ class FacebookSource(ChannelParser):
         return PostParser(
             uid=message['id'],
             author=message['from']['name'],
+            author_uid=message['from']['id'],
             content=message.get('message', '') or message.get(
                 'description', ''),
             date=message['created_time'],

@@ -61,8 +61,10 @@ class TwitterSource(ChannelParser):
         return PostParser(
             uid=message.id_str,
             author=message.user.name,
+            author_uid=message.user.screen_name,
             content=message.text,
             date=message.created_at,
+            image=message.user.profile_image_url,
             link='https://twitter.com/%s/status/%s' % (
                 message.user.screen_name, message.id_str)
         )

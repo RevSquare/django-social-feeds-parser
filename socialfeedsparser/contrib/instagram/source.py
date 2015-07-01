@@ -55,6 +55,7 @@ class InstagramSource(ChannelParser):
         return PostParser(
             uid=hashlib.sha224(message.id).hexdigest()[:50],
             author=message.user.username,
+            author_uid=message.user.username,
             content=message.caption,
             date=message.created_time,
             image=message.images['standard_resolution'].url,

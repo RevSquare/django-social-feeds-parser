@@ -42,7 +42,7 @@ class Channel(models.Model):
         verbose_name_plural = _('Social feed channels')
 
     def __unicode__(self):
-        return self.get_source_display()
+        return '%s - %s' % (self.get_source_display(), self.query)
 
     def can_update(self):
         """
@@ -83,7 +83,8 @@ class Post(models.Model):
     channel = models.ForeignKey(Channel)
     link = models.CharField(_('Link'), null=True, blank=True, max_length=255)
 
-    author = models.CharField(_('Author'), max_length=50)
+    author = models.CharField(_('Author name'), max_length=50)
+    author_uid = models.CharField(_('Author id'), max_length=50)
     content = models.TextField(_('Post content'))
     image = models.ImageField(
         _('Image'), upload_to='socialfeedsparser', null=True, blank=True)

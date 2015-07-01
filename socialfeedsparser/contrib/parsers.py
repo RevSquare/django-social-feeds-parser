@@ -78,12 +78,15 @@ class PostParser(object):
     """
     Manages the formating of posts into database compatible objects for the models.Post class.
     """
-    def __init__(self, uid, author=None, content=None, image=None, date=None, link=None):
+    def __init__(self, uid, author=None, author_uid=None, content=None, image=None, date=None, link=None):
         """
         :param uid: ;unique id of the post in the source.
         :type item: str
 
-        :param author: id of the author who poster the message.
+        :param author: Verbose name of the author who poster the message.
+        :type item: str
+
+        :param author_uid: id of the author who poster the message.
         :type item: str
 
         :param about_us: post content.
@@ -100,6 +103,7 @@ class PostParser(object):
         """
         self.uid = uid
         self.author = author
+        self.author_uid = author_uid
         self.content = content
         self.image = image
         self.date = date
@@ -122,6 +126,7 @@ class PostParser(object):
                 source_uid=self.uid,
                 channel=channel,
                 author=self.author,
+                author_uid=self.author_uid,
                 content=self.content,
                 date=self.date,
                 link=self.link
