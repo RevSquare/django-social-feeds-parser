@@ -132,19 +132,11 @@ class PostParser(object):
                 link=self.link
             )
             if self.image:
-                try:
-                    base_file_name = os.path.basename(self.image)
-                    file_ext = base_file_name.split('.')[-1]
-                    file_name = hashlib.sha224(base_file_name).hexdigest()[:50]
-                    file_name += '.' + file_ext
-                    downloaded = urllib2.urlopen(self.image).read()
-                    image_file = ContentFile(downloaded, name=file_name)
-                    sau.image.save(file_name, image_file)
-                except Exception:
-                    pass
+                base_file_name = os.path.basename(self.image)
+                file_name = hashlib.sha224(base_file_name).hexdigest()[:50]
+                downloaded = urllib2.urlopen(self.image).read()
+                image_file = ContentFile(downloaded, name=file_name)
+                sau.image.save(file_name, image_file)
 
-            try:
-                sau.save()
-            except Exception:
-                pass
+            sau.save()
         return sau
