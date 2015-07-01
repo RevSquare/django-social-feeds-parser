@@ -29,7 +29,7 @@ def linkify_url(message):
             href = 'http://' + url
         else:
             href = url
-        message = message.replace(url, '<a href="%s">%s</a>' % (href, url))
+        message = message.replace(url, '<a href="%s" target="_blank">%s</a>' % (href, url))
 
     return message
 
