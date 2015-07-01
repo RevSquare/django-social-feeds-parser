@@ -29,4 +29,4 @@ class PostManager(models.Manager):
         """
         Returns published posts.
         """
-        return self.all().filter(is_active=True, source__is_active=True)
+        return self.all().filter(is_active=True, channel__is_active=True)

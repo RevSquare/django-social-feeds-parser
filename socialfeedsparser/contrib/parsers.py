@@ -143,8 +143,6 @@ class PostParser(object):
                 except Exception:
                     pass
 
-            # by default make it as unactive
-            sau.is_active = False
             try:
                 sau.save()
             except Exception:

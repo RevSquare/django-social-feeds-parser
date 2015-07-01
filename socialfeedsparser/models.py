@@ -102,7 +102,7 @@ class Post(models.Model):
         ordering = ('order',)
 
     def __unicode__(self):
-        return u'%s - %s' % (self.source, self.author)
+        return u'%s - %s' % (self.channel, self.author)
 
     @property
     def linkified_content(self):
