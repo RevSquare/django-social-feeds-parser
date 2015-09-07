@@ -5,8 +5,8 @@ Template tags
 from django import template
 from django.utils.safestring import mark_safe
 
-from .models import Channel
-from .settings import settings
+from socialfeedsparser.models import Channel
+from socialfeedsparser.settings import settings
 
 register = template.Library()
 
