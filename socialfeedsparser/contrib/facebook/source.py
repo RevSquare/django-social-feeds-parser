@@ -26,7 +26,7 @@ class FacebookSource(ChannelParser):
         :param count: number of items to retrieve (default 20).
         :type item: int
         """
-        return self.get_api().get_connections(feed_id, 'feed')['data']
+        return self.get_api().get_connections(feed_id.encode('utf-8'), 'feed')['data']
 
     def get_messages_search(self, search):
         """
