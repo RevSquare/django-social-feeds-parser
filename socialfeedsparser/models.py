@@ -24,6 +24,7 @@ class Channel(models.Model):
         (SEARCH, _('search'))
     )
 
+    name = models.CharField(_('Channel\'s name'), max_length=100, blank=True, default='')
     source = models.CharField(_('Social media'), max_length=50, choices=SOURCE_CHOICES, default=SOURCE_CHOICES[0])
     limit = models.IntegerField(_('Limit'), null=True, blank=True)
     query = models.CharField(_('Query'), max_length=255, help_text=_('Enter a search query or user/page id.'))
