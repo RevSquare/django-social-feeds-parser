@@ -17,7 +17,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         channels = Channel.objects.to_update()
         for channel in channels:
-            self.stdout.write('Processing source: "%s"' % channel)
+            self.stdout.write(u'Processing source: "%s"' % channel)
             sc = channel.source_class(channel=channel)
             sc.collect_messages()
             channel.updated = now()
