@@ -43,7 +43,7 @@ class Channel(models.Model):
         verbose_name_plural = _('Social feed channels')
 
     def __unicode__(self):
-        return '%s - %s' % (self.get_source_display(), self.query)
+        return '%s - %s' % (self.get_source_display(), self.name or self.query)
 
     def can_update(self):
         """
