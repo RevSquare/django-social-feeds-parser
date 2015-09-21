@@ -24,6 +24,7 @@ class Channel(models.Model):
         (SEARCH, _('search'))
     )
 
+    name = models.CharField(_('Channel\'s name'), max_length=100, blank=True, default='')
     source = models.CharField(_('Social media'), max_length=50, choices=SOURCE_CHOICES, default=SOURCE_CHOICES[0])
     limit = models.IntegerField(_('Limit'), null=True, blank=True)
     query = models.CharField(_('Query'), max_length=255, help_text=_('Enter a search query or user/page id.'))
@@ -42,7 +43,7 @@ class Channel(models.Model):
         verbose_name_plural = _('Social feed channels')
 
     def __unicode__(self):
-        return '%s - %s' % (self.get_source_display(), self.query)
+        return '%s - %s' % (self.get_source_display(), self.name or self.query)
 
     def can_update(self):
         """

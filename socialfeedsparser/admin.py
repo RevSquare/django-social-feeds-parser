@@ -23,7 +23,7 @@ class ChannelAdmin(admin.ModelAdmin):
     """
     Admin class for the Channel model.
     """
-    list_display = ('query', 'source', 'query_type', 'updated', 'is_active')
+    list_display = ('query', 'name', 'source', 'query_type', 'updated', 'is_active')
     list_filter = ('query', 'source', 'query_type', 'updated', 'is_active')
     actions = [get_messages]
     radio_fields = {"query_type": admin.HORIZONTAL}
