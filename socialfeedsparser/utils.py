@@ -25,7 +25,7 @@ def linkify_url(message):
     for url in url_regex.findall(message):
         if url.endswith('.'):
             url = url[:-1]
-        if 'http://' not in url:
+        if 'http://' not in url and 'https://' not in url:
             href = 'http://' + url
         else:
             href = url
