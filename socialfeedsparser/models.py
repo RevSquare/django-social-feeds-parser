@@ -101,6 +101,7 @@ class Post(models.Model):
         verbose_name = _('Social feed post')
         verbose_name_plural = _('Social feed posts')
         ordering = ('order',)
+        unique_together = (("source_uid", "channel"), )
 
     def __unicode__(self):
         return u'%s - %s' % (self.channel, self.author)

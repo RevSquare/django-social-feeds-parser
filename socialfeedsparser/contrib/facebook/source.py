@@ -1,6 +1,7 @@
 import facebook as fbsdk
 
 from socialfeedsparser.contrib.parsers import ChannelParser, PostParser
+from socialfeedsparser.settings import SOCIALFEEDSPARSER_TIMEOUT
 from .settings import FACEBOOK_CLIENT_ID, FACEBOOK_CLIENT_SECRET
 
 
@@ -42,7 +43,7 @@ class FacebookSource(ChannelParser):
         """
         Return authenticated connections with fb.
         """
-        api = fbsdk.GraphAPI(FACEBOOK_ACCESS_TOKEN)
+        api = fbsdk.GraphAPI(FACEBOOK_ACCESS_TOKEN, timeout=float(SOCIALFEEDSPARSER_TIMEOUT))
         return api
 
     def prepare_message(self, message):

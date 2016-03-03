@@ -6,7 +6,7 @@ reload(sys).setdefaultencoding('Utf-8')
 
 setup(
     name='django-social-feeds-parser',
-    version='0.4.0',
+    version='0.5',
     packages=find_packages(),
     include_package_data=True,
     license='BSD License',

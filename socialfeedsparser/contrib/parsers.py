@@ -2,7 +2,10 @@ import hashlib
 import os
 import urllib2
 
+from _mysql_exceptions import Warning
+
 from django.core.files.base import ContentFile
+from django.db.utils import IntegrityError
 
 
 class ChannelParser(object):
@@ -78,7 +81,7 @@ class PostParser(object):
     """
     Manages the formating of posts into database compatible objects for the models.Post class.
     """
-    def __init__(self, uid, author=None, author_uid=None, content=None, image=None, date=None, link=None):
+    def __init__(self, uid, author='', author_uid=None, content=None, image=None, date=None, link=None):
         """
         :param uid: ;unique id of the post in the source.
         :type item: str
@@ -117,26 +120,28 @@ class PostParser(object):
         :type item: int
         """
         from socialfeedsparser.models import Post
+        import warnings
 
         try:
-            sau = Post.objects.get(
-                source_uid=self.uid, channel=channel)
-        except Post.DoesNotExist:
             sau = Post(
                 source_uid=self.uid,
                 channel=channel,
-                author=self.author,
+                author=self.author[:49],
                 author_uid=self.author_uid,
                 content=self.content,
                 date=self.date,
                 link=self.link
             )
-            if self.image:
-                base_file_name = os.path.basename(self.image)
-                file_name = hashlib.sha224(base_file_name).hexdigest()[:50]
-                downloaded = urllib2.urlopen(self.image).read()
-                image_file = ContentFile(downloaded, name=file_name)
-                sau.image.save(file_name, image_file)
 
-            sau.save()
+            with warnings.catch_warnings():  # ignoring db warnings, dirty
+                warnings.simplefilter("ignore")
+                if self.image:
+                    base_file_name = os.path.basename(self.image)
+                    file_name = hashlib.sha224(base_file_name).hexdigest()[:50]
+                    downloaded = urllib2.urlopen(self.image).read()
+                    image_file = ContentFile(downloaded, name=file_name)
+                    sau.image.save(file_name, image_file)
+                sau.save()
+        except IntegrityError:
+            pass
         return sau

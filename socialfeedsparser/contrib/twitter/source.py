@@ -1,6 +1,7 @@
 import tweepy
 
 from socialfeedsparser.contrib.parsers import ChannelParser, PostParser
+from socialfeedsparser.settings import SOCIALFEEDSPARSER_TIMEOUT
 from .settings import (TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET,
                        TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKENS_SECRET)
 
@@ -46,7 +47,7 @@ class TwitterSource(ChannelParser):
             consumer_key=TWITTER_CONSUMER_KEY,
             consumer_secret=TWITTER_CONSUMER_SECRET)
         oauth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKENS_SECRET)
-        return tweepy.API(oauth)
+        return tweepy.API(oauth, timeout=SOCIALFEEDSPARSER_TIMEOUT)
 
     def prepare_message(self, message):
         """
