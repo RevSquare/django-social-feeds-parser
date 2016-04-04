@@ -4,7 +4,7 @@ from distutils.core import setup
 import sys
 try:
     reload(sys).setdefaultencoding('Utf-8')
-except NameError: # for python > 3.4.x
+except NameError: # fix for python >= 3.4.x
     from importlib import reload
     reload(sys)
 
