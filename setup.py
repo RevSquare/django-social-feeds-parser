@@ -2,7 +2,11 @@
 from setuptools import find_packages
 from distutils.core import setup
 import sys
-reload(sys).setdefaultencoding('Utf-8')
+try:
+    reload(sys).setdefaultencoding('Utf-8')
+except NameError: # for python > 3.4.x
+    from importlib import reload
+    reload(sys)
 
 setup(
     name='django-social-feeds-parser',
