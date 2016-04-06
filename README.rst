@@ -24,7 +24,7 @@ Install python-linkedin if needed:
 
 .. code-block:: shell-session
 
-    pip intall -e git+https://github.com/ozgur/python-linkedin.git@master#egg=python-linkedin
+    pip install -e git+https://github.com/ozgur/python-linkedin.git@master#egg=python-linkedin
 
 *****
 Setup
@@ -194,3 +194,4 @@ TODO
 
 * use celery to process news
 * write tests
+* support python3.4 for twitter and instagram
