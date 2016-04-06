@@ -20,6 +20,12 @@ From Github
 
     pip install -e git+https://github.com/revsquare/django-social-feeds-parser.git#egg=django_socialfeeds-parser
 
+Install python-linkedin if needed:
+
+.. code-block:: shell-session
+
+    pip intall -e git+https://github.com/ozgur/python-linkedin.git@master#egg=python-linkedin
+
 *****
 Setup
 *****
@@ -43,6 +49,7 @@ Configure the social media source you want to trigger. You can of course add you
         'socialfeedsparser.contrib.twitter',
         'socialfeedsparser.contrib.facebook',
         'socialfeedsparser.contrib.instagram',
+        'socialfeedsparser.contrib.linkedin',
         'your.socialfeedsparser.source',
     )
 
@@ -73,6 +80,26 @@ Instagram
 .. code-block::  python
 
     SOCIALFEEDSPARSER_INSTAGRAM_ACCESS_TOKEN = "your app access token"
+
+LinkedIn
+---------
+
+.. code-block::  python
+
+    SOCIALFEEDSPARSER_LINKEDIN_API_KEY = "your application api key"
+    SOCIALFEEDSPARSER_LINKEDIN_API_SECRET = "your application api secret"
+    SOCIALFEEDSPARSER_LINKEDIN_RETURN_URL = 'http://your.domain.com/social-feeds-parser/linkedin-save-token/'
+    SOCIALFEEDSPARSER_LINKEDIN_PERMISSIONS = (
+        'rw_company_admin',
+        'r_basicprofile',
+        # 'r_fullprofile',
+        'r_emailaddress',
+        # 'r_network',
+        # 'r_contactinfo',
+        'w_share',
+        # 'rw_groups',
+        # 'w_messages'
+    )
 
 
 urls.py

@@ -33,8 +33,11 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
     install_requires=[
-        'facebook-sdk==0.4.0',
+        'facebook-sdk==1.0.0',
         'python-instagram==0.8.0.',
         'tweepy==3.3.0'
+    ],
+    dependency_links=[
+        'https://github.com/ozgur/python-linkedin.git@master#egg=python-linkedin',
     ],
 )

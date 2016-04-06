@@ -23,10 +23,16 @@ class ChannelAdmin(admin.ModelAdmin):
     """
     Admin class for the Channel model.
     """
-    list_display = ('query', 'name', 'source', 'query_type', 'updated', 'is_active')
+    list_display = ('query', 'name', 'source', 'query_type', 'updated', 'is_active', 'show_linkedin_token_renew_link')
     list_filter = ('query', 'source', 'query_type', 'updated', 'is_active')
+    exclude = ('user_secret', 'user_token',)
     actions = [get_messages]
     radio_fields = {"query_type": admin.HORIZONTAL}
+
+    def show_linkedin_token_renew_link(self, obj):
+        return '<a href="%s">%s</a>' % (obj.token_renew_link, _('Click to renew')) if obj.source == 'linkedin' else ''
+    show_linkedin_token_renew_link.allow_tags = True
+    show_linkedin_token_renew_link.short_description = _('Renew Token')
 
 
 class PostAdmin(admin.ModelAdmin):
