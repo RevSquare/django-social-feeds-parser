@@ -6,9 +6,11 @@ from .settings import FACEBOOK_CLIENT_ID, FACEBOOK_CLIENT_SECRET
 try:
     from urllib2 import urlopen
     from urllib import urlencode
+    from urllib.error import HTTPError
 except (ImportError):  # for python >= 3.4
     from urllib.request import urlopen
     from urllib.parse import urlencode
+    from urllib.error import HTTPError
 
 
 def get_app_access_token(app_id, app_secret):
@@ -26,16 +28,19 @@ def get_app_access_token(app_id, app_secret):
     args = {'grant_type': 'client_credentials',
             'client_id': app_id,
             'client_secret': app_secret}
-
-    file = urlopen("https://graph.facebook.com/oauth/access_token?" +
-                   urlencode(args))
-    file_readed = file.read()
     try:
-        result = file_readed.split("=")[1]
-    except (TypeError):
-        result = file_readed.decode("utf-8").split("=")[1]
-    finally:
-        file.close()
+        file = urlopen("https://graph.facebook.com/oauth/access_token?" +
+                       urlencode(args))
+        file_readed = file.read()
+        try:
+            result = file_readed.split("=")[1]
+        except (TypeError):
+            result = file_readed.decode("utf-8").split("=")[1]
+        finally:
+            file.close()
+    except (HTTPError):
+        result = None
+        print('collect_social_feed urllib.error.HTTPError')
     return result
 
 FACEBOOK_ACCESS_TOKEN = get_app_access_token(
