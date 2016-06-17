@@ -1,8 +1,9 @@
 import hashlib
 import os
-import urllib2
-
-from _mysql_exceptions import Warning
+try:
+    from urllib2 import urlopen
+except(ImportError): # for python >= 3.4
+    from urllib.request import urlopen
 
 from django.core.files.base import ContentFile
 from django.db.utils import IntegrityError
@@ -123,6 +124,8 @@ class PostParser(object):
         import warnings
 
         try:
+            sau = Post.objects.get(source_uid=self.uid, channel=channel)
+        except Post.DoesNotExist:
             sau = Post(
                 source_uid=self.uid,
                 channel=channel,
@@ -137,8 +140,11 @@ class PostParser(object):
                 warnings.simplefilter("ignore")
                 if self.image:
                     base_file_name = os.path.basename(self.image)
-                    file_name = hashlib.sha224(base_file_name).hexdigest()[:50]
-                    downloaded = urllib2.urlopen(self.image).read()
+                    try:
+                        file_name = hashlib.sha224(base_file_name).hexdigest()[:50]
+                    except(TypeError):
+                        file_name = hashlib.sha224(base_file_name.encode('utf-8')).hexdigest()[:50]
+                    downloaded = urlopen(self.image).read()
                     image_file = ContentFile(downloaded, name=file_name)
                     sau.image.save(file_name, image_file)
                 sau.save()

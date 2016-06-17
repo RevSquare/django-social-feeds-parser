@@ -3,9 +3,47 @@ import facebook as fbsdk
 from socialfeedsparser.contrib.parsers import ChannelParser, PostParser
 from socialfeedsparser.settings import SOCIALFEEDSPARSER_TIMEOUT
 from .settings import FACEBOOK_CLIENT_ID, FACEBOOK_CLIENT_SECRET
+try:
+    from urllib2 import urlopen
+    from urllib import urlencode
+    from urllib.error import HTTPError
+except (ImportError):  # for python >= 3.4
+    from urllib.request import urlopen
+    from urllib.parse import urlencode
+    from urllib.error import HTTPError
 
 
-FACEBOOK_ACCESS_TOKEN = fbsdk.get_app_access_token(
+def get_app_access_token(app_id, app_secret):
+    """Get the access_token for the app.
+
+    This token can be used for insights and creating test users.
+
+    app_id = retrieved from the developer page
+    app_secret = retrieved from the developer page
+
+    Returns the application access_token.
+
+    """
+    # Get an app access token
+    args = {'grant_type': 'client_credentials',
+            'client_id': app_id,
+            'client_secret': app_secret}
+    try:
+        file = urlopen("https://graph.facebook.com/oauth/access_token?" +
+                       urlencode(args))
+        file_readed = file.read()
+        try:
+            result = file_readed.split("=")[1]
+        except (TypeError):
+            result = file_readed.decode("utf-8").split("=")[1]
+        finally:
+            file.close()
+    except (HTTPError):
+        result = None
+        print('collect_social_feed urllib.error.HTTPError')
+    return result
+
+FACEBOOK_ACCESS_TOKEN = get_app_access_token(
     FACEBOOK_CLIENT_ID, FACEBOOK_CLIENT_SECRET)
 
 
@@ -27,7 +65,12 @@ class FacebookSource(ChannelParser):
         :param count: number of items to retrieve (default 20).
         :type item: int
         """
-        return self.get_api().get_connections(feed_id.encode('utf-8'), 'feed')['data']
+        try:
+            ret = self.get_api().get_connections(feed_id.encode('utf-8'), 'feed')['data']
+        except(fbsdk.GraphAPIError):
+            ret = self.get_api().get_connections(feed_id, 'feed')['data']
+
+        return ret
 
     def get_messages_search(self, search):
         """

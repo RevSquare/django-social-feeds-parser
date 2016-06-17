@@ -2,9 +2,12 @@ from django.db import models
 from django.utils.importlib import import_module
 from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
+from linkedin import linkedin
 
 from .managers import PostManager, ChannelManager
 from .settings import SOCIALFEEDSPARSER_SOURCE
+from .contrib.linkedin.settings import LINKEDIN_API_KEY, LINKEDIN_API_SECRET, \
+    LINKEDIN_RETURN_URL, LINKEDIN_PERMISSIONS
 
 # load all sources
 from .utils import get_source, linkify_url, linkify_hashes, linkify_arobase
@@ -35,6 +38,8 @@ class Channel(models.Model):
                                       help_text=_('Collecting messages periodicy. (In minutes)'))
     is_active = models.BooleanField(_('Is Active'), default=True)
     updated = models.DateTimeField(_('Last Updated'), null=True, blank=True)
+    user_secret = models.TextField(_('User Secret'), null=True, blank=True)
+    user_token = models.TextField(_('User Token'), null=True, blank=True)
 
     objects = ChannelManager()
 
@@ -44,6 +49,9 @@ class Channel(models.Model):
 
     def __unicode__(self):
         return '%s - %s' % (self.get_source_display(), self.name or self.query)
+
+    def __str__(self):
+        return self.__unicode__()
 
     def can_update(self):
         """
@@ -75,6 +83,21 @@ class Channel(models.Model):
         """
         return self.get_posts()
 
+    @property
+    def token_renew_link(self):
+        ret = ''
+        if self.source == 'linkedin':
+            authentication = linkedin.LinkedInAuthentication(
+                LINKEDIN_API_KEY, LINKEDIN_API_SECRET, LINKEDIN_RETURN_URL,
+                LINKEDIN_PERMISSIONS)
+            # Optionally one can send custom "state" value that will be returned from OAuth server
+            # It can be used to track your user state or something else (it's up to you)
+            # Be aware that this value is sent to OAuth server AS IS - make sure to encode or hash it
+            # authorization.state = 'your_encoded_message'
+            ret = authentication.authorization_url  # open this url on your browser
+            linkedin.LinkedInApplication(authentication)
+        return ret
+
 
 class Post(models.Model):
     """
@@ -104,7 +127,10 @@ class Post(models.Model):
         unique_together = (("source_uid", "channel"), )
 
     def __unicode__(self):
-        return u'%s - %s' % (self.channel, self.author)
+        return u'%s - %s' % (self.channel.__unicode__(), self.author)
+
+    def __str__(self):
+        return self.__unicode__()
 
     @property
     def linkified_content(self):
