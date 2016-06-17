@@ -96,15 +96,22 @@ class FacebookSource(ChannelParser):
         :param message: message entry to convert.
         :type item: dict
         """
-        l = 'http://www.facebook.com/permalink.php?id=%s&v=wall&story_fbid=%s' \
-            % (message['from']['id'], message['id'].split('_')[1])
+        if 'from' in message:
+            author_name = message['from']['name']
+            author_uid = message['from']['id']
+        else:
+            author_name = self.channel.name
+            author_uid = self.channel.query
+
+        link = 'http://www.facebook.com/permalink.php?id=%s&v=wall&story_fbid=%s' % (
+            author_uid, message['id'].split('_')[1])
+
         return PostParser(
             uid=message['id'],
-            author=message['from']['name'],
-            author_uid=message['from']['id'],
-            content=message.get('message', '') or message.get(
-                'description', ''),
+            author=author_name,
+            author_uid=author_uid,
+            content=message.get('message', '') or message.get('description', ''),
             date=message['created_time'],
             image=message.get('picture', None),
-            link=l
+            link=link
         )
