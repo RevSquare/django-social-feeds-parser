@@ -1,4 +1,5 @@
 import facebook as fbsdk
+import json
 
 from socialfeedsparser.contrib.parsers import ChannelParser, PostParser
 from socialfeedsparser.settings import SOCIALFEEDSPARSER_TIMEOUT
@@ -6,11 +7,9 @@ from .settings import FACEBOOK_CLIENT_ID, FACEBOOK_CLIENT_SECRET
 try:
     from urllib2 import urlopen
     from urllib import urlencode
-    from urllib.error import HTTPError
 except (ImportError):  # for python >= 3.4
     from urllib.request import urlopen
     from urllib.parse import urlencode
-    from urllib.error import HTTPError
 
 
 def get_app_access_token(app_id, app_secret):
@@ -18,29 +17,26 @@ def get_app_access_token(app_id, app_secret):
 
     This token can be used for insights and creating test users.
 
+
     app_id = retrieved from the developer page
+
     app_secret = retrieved from the developer page
+
 
     Returns the application access_token.
 
     """
+
     # Get an app access token
     args = {'grant_type': 'client_credentials',
             'client_id': app_id,
             'client_secret': app_secret}
-    try:
-        file = urlopen("https://graph.facebook.com/oauth/access_token?" +
-                       urlencode(args))
-        file_readed = file.read()
-        try:
-            result = file_readed.split("=")[1]
-        except (TypeError):
-            result = file_readed.decode("utf-8").split("=")[1]
-        finally:
-            file.close()
-    except (HTTPError):
-        result = None
-        print('collect_social_feed urllib.error.HTTPError')
+    file = urlopen("https://graph.facebook.com/oauth/access_token?" +
+                   urlencode(args))
+    file_readed = file.read()
+    values = json.loads(file_readed)
+    result = values.get('access_token')
+    file.close()
     return result
 
 FACEBOOK_ACCESS_TOKEN = get_app_access_token(
@@ -96,22 +92,15 @@ class FacebookSource(ChannelParser):
         :param message: message entry to convert.
         :type item: dict
         """
-        if 'from' in message:
-            author_name = message['from']['name']
-            author_uid = message['from']['id']
-        else:
-            author_name = self.channel.name
-            author_uid = self.channel.query
-
-        link = 'http://www.facebook.com/permalink.php?id=%s&v=wall&story_fbid=%s' % (
-            author_uid, message['id'].split('_')[1])
-
+        l = 'http://www.facebook.com/permalink.php?id=%s&v=wall&story_fbid=%s' \
+            % (message['from']['id'], message['id'].split('_')[1])
         return PostParser(
             uid=message['id'],
-            author=author_name,
-            author_uid=author_uid,
-            content=message.get('message', '') or message.get('description', ''),
+            author=message['from']['name'],
+            author_uid=message['from']['id'],
+            content=message.get('message', '') or message.get(
+                'description', ''),
             date=message['created_time'],
             image=message.get('picture', None),
-            link=link
+            link=l
         )
