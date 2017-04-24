@@ -17,11 +17,8 @@ def get_app_access_token(app_id, app_secret):
 
     This token can be used for insights and creating test users.
 
-
     app_id = retrieved from the developer page
-
     app_secret = retrieved from the developer page
-
 
     Returns the application access_token.
 
