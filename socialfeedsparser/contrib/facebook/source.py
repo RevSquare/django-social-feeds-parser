@@ -30,7 +30,7 @@ def get_app_access_token(app_id, app_secret):
             'client_secret': app_secret}
     file = urlopen("https://graph.facebook.com/oauth/access_token?" +
                    urlencode(args))
-    file_readed = file.read()
+    file_readed = file.read().decode('utf8')
     values = json.loads(file_readed)
     result = values.get('access_token')
     file.close()
