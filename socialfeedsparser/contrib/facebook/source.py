@@ -90,13 +90,12 @@ class FacebookSource(ChannelParser):
         :type item: dict
         """
         l = 'http://www.facebook.com/permalink.php?id=%s&v=wall&story_fbid=%s' \
-            % (message['from']['id'], message['id'].split('_')[1])
+            % (message['id'], message['id'].split('_')[1])
         return PostParser(
             uid=message['id'],
-            author=message['from']['name'],
-            author_uid=message['from']['id'],
-            content=message.get('message', '') or message.get(
-                'description', ''),
+            author=message.get('name', ''),
+            author_uid=message['id'],
+            content=message.get('message', '') or message.get('description', ''),
             date=message['created_time'],
             image=message.get('picture', None),
             link=l
