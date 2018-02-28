@@ -1,5 +1,8 @@
 from django.db import models
-from django.utils.importlib import import_module
+try:
+    from django.utils.importlib import import_module
+except ImportError:
+    from django.utils.module_loading import import_module
 from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
 from linkedin import linkedin
