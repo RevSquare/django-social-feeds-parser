@@ -42,14 +42,17 @@ class LinkendInSource(ChannelParser):
 
     def prepare_message(self, message):
         """
-        Convert tweets to standard message.
+        Convert linkedin post to standard message.
 
         :param message: message entry to convert.
         :type item: dict
         """
-        share = message['updateContent']['companyStatusUpdate']['share']
-        l = 'https://www.linkedin.com/hp/updates?topic=%s' \
-            % message['updateKey'].split('-')[2]
+        try:
+            share = message['updateContent']['companyStatusUpdate']['share']
+            l = 'https://www.linkedin.com/hp/updates?topic=%s' % message['updateKey'].split('-')[2]
+        except KeyError:
+            raise
+
         return PostParser(
             uid=message['updateKey'].split('-')[2],
             author=message['updateContent']['company']['name'],

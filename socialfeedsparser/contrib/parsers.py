@@ -28,9 +28,12 @@ class ChannelParser(object):
         Retrieves and saves message for the models.Channel instance.
         """
         messages = self.get_messages()
-        messages = [self.prepare_message(message) for message in messages]
         for message in messages:
-            message.save(channel=self.channel)
+            try:
+                parsed_message = self.prepare_message(message)
+            except KeyError:
+                continue
+            parsed_message.save(channel=self.channel)
 
     def get_messages(self):
         """
